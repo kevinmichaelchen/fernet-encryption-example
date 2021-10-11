@@ -14,20 +14,28 @@ const (
 )
 
 func main() {
-
 	key, err := fernet.DecodeKey(secret)
 	if err != nil {
 		panic(err)
 	}
 
+	// ENCODE
 	token, err := encodeIndex(key, "index=100")
+	if err != nil {
+		panic(err)
+	}
+	log.Println(string(token))
+
+	// DECODE
+	key, err = fernet.DecodeKey(secret)
 	if err != nil {
 		panic(err)
 	}
 
 	msg := decodeIndex(key, token)
-
 	log.Println(string(msg))
+
+	// msg == gAAAAABhZG_zULYCUxwlP4-9RMWVsrTQY7qRzs2dvB-eumuNknrbO9y0TF949FP4PVgIB0O4WXzkWjfngmu2_APX66yHPdNuMQ==
 }
 
 func encodeIndex(key *fernet.Key, in string) ([]byte, error) {
