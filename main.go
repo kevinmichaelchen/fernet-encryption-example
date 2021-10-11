@@ -9,12 +9,15 @@ import (
 )
 
 const (
-	secret         = "cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4="
+	// Fernet key must be 32 random bytes base64-encoded.
+	// You can generate one on your Terminal with:
+	// dd if=/dev/urandom bs=32 count=1 2>/dev/null | openssl base64
+	encodedKey     = "eVmrm+HzKImS3ezoXRQ2QfmIyaJ9SJlvKn5s3L8upKQ="
 	tokenLongevity = 7 * 24 * time.Hour
 )
 
 func main() {
-	key, err := fernet.DecodeKey(secret)
+	key, err := fernet.DecodeKey(encodedKey)
 	if err != nil {
 		panic(err)
 	}
@@ -27,7 +30,7 @@ func main() {
 	log.Println(string(token))
 
 	// DECODE
-	key, err = fernet.DecodeKey(secret)
+	key, err = fernet.DecodeKey(encodedKey)
 	if err != nil {
 		panic(err)
 	}
@@ -35,7 +38,7 @@ func main() {
 	msg := decodeIndex(key, token)
 	log.Println(string(msg))
 
-	// msg == gAAAAABhZG_zULYCUxwlP4-9RMWVsrTQY7qRzs2dvB-eumuNknrbO9y0TF949FP4PVgIB0O4WXzkWjfngmu2_APX66yHPdNuMQ==
+	// msg == gAAAAABhZHNntqnpp73b-VRCrx1pvOT08HPyF15zrC08Vk0WuHkDP92wb4cjlvFeiYy2rYSdniMvafTYNqrFeJKOEv9C7T4pUw==
 }
 
 func encodeIndex(key *fernet.Key, in string) ([]byte, error) {
